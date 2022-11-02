@@ -100,13 +100,16 @@ async function main() {
   /**
    * The cached value is needed after some time
    */
-  setTimeout(() => {
+  setTimeout(async () => {
     console.log("Timeout complete. Long Term Cached value is needed");
 
     /**
      * Convert the cached value back into a stream
      */
     const longTermCachedStream = stream.Readable.from(cachedValue);
+
+    // Simulate async
+    await new Promise((resolve) => setTimeout(resolve, 200));
 
     /**
      * Consume the cached stream
@@ -121,16 +124,16 @@ async function main() {
     });
     longTermCachedStream.on("end", () => {
       console.log("longTermCachedStream Ended");
+
+      /**
+       * Confirm that all the bodies are the same
+       */
       console.log(
         "All stream values are the same:",
         stream1Value === longTermCachedStreamValue &&
           stream1Value === shortTermCachedStreamValue
       );
     });
-
-    /**
-     * Confirm
-     */
   }, 5000);
 }
 
